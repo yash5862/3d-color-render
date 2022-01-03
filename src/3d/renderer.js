@@ -3,7 +3,6 @@ import CameraControls from "./orbitControls";
 import { AdaptiveDpr } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
 import { Plane } from './plane';
-import TireModel from "./3d.modal";
 
 const Model = (props) => {
     return <Canvas>
