@@ -2,10 +2,10 @@ import logo from './logo.svg';
 import './App.css';
 import Renderer3D from "./3d/renderer";
 import { MaterialPicker as ColorPicker } from 'react-color';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import CustomColorPicker from './components/picker.component';
-import Modal from './3d/3d.modal';
 import { Col, Row } from 'reactstrap';
+import {Canvas} from "@react-three/fiber";
 
 function App() {
 
@@ -17,6 +17,7 @@ function App() {
 
   return (
     <>
+      <div className='container'>
       <Row>
         <Col md={12}>
           <CustomColorPicker
@@ -31,34 +32,33 @@ function App() {
           <div className="App" style={{ height: '100vh', width: '100vh' }}>
             <Row>
               <Col md={6}>
-                <Renderer3D>
-                  <Modal
+                <Canvas style={{ height: '100%', width: '100%' }}>
+                  <Renderer3D
                       path="/wheel.fbx"
-                      scale={[0.030, 0.030, 0.030]}
+                      scale={[1,1,1]}
                       position={[0, 0, 0]}
                       renderPriority={2}
                       color={color}
                   />
-                </Renderer3D>
+                </Canvas>
               </Col>
 
               <Col md={6}>
-                <Renderer3D>
-                  <Modal
+                <Canvas style={{ height: '100%', width: '100%' }}>
+                  <Renderer3D
                       path="/temp.obj"
-                      scale={[0.50, 0.50, 0.50]}
+                      scale={[1,1,1]}
                       position={[0, 0, 0]}
                       boundingBox={false}
                       renderPriority={2}
                       color={color}
                   />
-                </Renderer3D>
+                </Canvas>
               </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Renderer3D>
-                  <Modal
+
+              <Col md={6}>
+                <Canvas style={{ height: '100%', width: '100%' }}>
+                  <Renderer3D
                       path="/tire2.gltf"
                       scale={[1, 1, 1]}
                       position={[0, 0, 0]}
@@ -66,17 +66,13 @@ function App() {
                       renderPriority={2}
                       color={color}
                   />
-                </Renderer3D>
+                </Canvas>
               </Col>
             </Row>
         </div>
-          <CustomColorPicker
-            color={ color }
-            onChangeComplete={ onColorChange }
-          />
         </Col>
       </Row>
-      
+      </div>
     </>
   );
 }

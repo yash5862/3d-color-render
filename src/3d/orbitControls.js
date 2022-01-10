@@ -4,11 +4,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 extend({ OrbitControls })
 
-const CameraControls = () => {
-    const {
-        camera,
-        gl: { domElement },
-    } = useThree();
+const CameraControls = ({ camera, gl, domElement }) => {
     const controls = useRef();
     useFrame((state) => controls.current.update());
     return (
