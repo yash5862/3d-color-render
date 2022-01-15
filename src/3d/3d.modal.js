@@ -14,18 +14,9 @@ const Model = (props) => {
         position = [0, 0, 0]
     } = props;
 
-    const onResize = (e) => {
-
-    };
-
     useEffect(() => {
+        autoScaleAndFit();
         adjustWorldCenter();
-        // fitCameraToObject(props.camera, model);
-        // zoomExtents(props.camera);
-        window.addEventListener("resize", onResize);
-        return () => {
-            window.removeEventListener("resize", onResize);
-        }
     }, []);
 
     useEffect(() => {
@@ -58,56 +49,33 @@ const Model = (props) => {
     }
 
     const adjustWorldCenter = () => {
-        getRenderableObject().scale.multiplyScalar(1 / 100);
         getRenderableObject().traverse( function ( child ) {
-            console.log('child', child)
             if ( child.isMesh ) {
                 child.geometry.center(); // center here
-                zoomExtents(props.camera, child);
             }
         });
     };
 
-    const zoomExtents = (camera, object) => {
-        let vFoV = camera.getEffectiveFOV();
-        let hFoV = camera.fov * camera.aspect;
+    const autoScaleAndFit = () => {
+        let mroot = getRenderableObject();
+        let bbox = new THREE.Box3().setFromObject(mroot);
+        let cent = bbox.getCenter(new THREE.Vector3());
+        let size = bbox.getSize(new THREE.Vector3());
 
-        let FoV = Math.min(vFoV, hFoV);
-        let FoV2 = FoV / 2;
-
-        let dir = new THREE.Vector3();
-        camera.getWorldDirection(dir);
-
-        console.log(getRenderableObject())
-        let bb = object.geometry.boundingBox;
-        let bs = object.geometry.boundingSphere;
-        let bsWorld = bs.center.clone();
-        object.localToWorld(bsWorld);
-
-        let th = FoV2 * Math.PI / 180.0;
-        let sina = Math.sin(th);
-        let R = bs.radius;
-        let FL = R / sina;
-
-        let cameraDir = new THREE.Vector3();
-        camera.getWorldDirection(cameraDir);
-
-        let cameraOffs = cameraDir.clone();
-        cameraOffs.multiplyScalar(-FL);
-        let newCameraPos = bsWorld.clone().add(cameraOffs);
-
-        camera.position.copy(newCameraPos);
-        camera.lookAt(bsWorld);
-        // orbit.target.copy(bsWorld);
-        //
-        // orbit.update();
+        //Rescale the object to normalized space
+        let maxAxis = Math.max(size.x, size.y, size.z);
+        mroot.scale.multiplyScalar(3.0 / maxAxis);
+        bbox.setFromObject(mroot);
+        bbox.getCenter(cent);
+        bbox.getSize(size);
+        //Reposition to 0,halfY,0
+        mroot.position.copy(cent).multiplyScalar(-1);
+        mroot.position.y-= (size.y * 0.5);
     }
 
-    const { viewport } = useThree();
     const extension = getFileExtension(path);
     const model = useLoader(getValidLoader(extension), path);
 
-    console.log('viewport', viewport);
 
     return model ? <primitive object={getRenderableObject()} scale={scale} position={position} /> : null;
 };

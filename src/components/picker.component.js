@@ -8,7 +8,7 @@ class CustomColorPicker extends React.Component {
 
     state = {
         displayColorPicker: false,
-        color: 'ffffff',
+        color: '#D5D5D5',
     };
 
     constructor(props) {
@@ -37,18 +37,18 @@ class CustomColorPicker extends React.Component {
     const styles = reactCSS({
       'default': {
         color: {
-          width: '36px',
-          height: '14px',
+          width: '50px',
+          height: '30px',
           borderRadius: '2px',
-          background: this.state.color,
+          background: this.props.color,
+          marginLeft:"20px"
         },
         swatch: {
           padding: '5px',
-          background: '#fff',
-          borderRadius: '1px',
-          boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
-          display: 'inline-block',
           cursor: 'pointer',
+          display:"flex",
+          alignItems: "center",
+          color:"#fff"
         },
         popover: {
           position: 'absolute',
@@ -67,7 +67,7 @@ class CustomColorPicker extends React.Component {
     return (
       <div>
         <div style={ styles.swatch } onClick={ this.handleClick }>
-            Choose Color: 
+           <h1>Choose Color: </h1> 
           <div style={ styles.color } />
         </div>
         { this.state.displayColorPicker ? <div style={ styles.popover }>
