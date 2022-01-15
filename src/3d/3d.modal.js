@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import {useLoader, useThree} from "@react-three/fiber";
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader.js";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
 import {FBXLoader} from "three/examples/jsm/loaders/FBXLoader";
 import * as THREE from 'three';
 import { getFileExtension } from '../utils/utils';
+import { Html, useProgress } from '@react-three/drei'
 
 const Model = (props) => {
     let {
@@ -13,6 +14,8 @@ const Model = (props) => {
         rotation,
         position = [0, 0, 0]
     } = props;
+
+    const { progress } = useProgress()
 
     useEffect(() => {
         // autoScaleAndFit();
@@ -76,9 +79,15 @@ const Model = (props) => {
     const extension = getFileExtension(path);
     const model = useLoader(getValidLoader(extension), path);
 
-    autoScaleAndFit();
-    adjustWorldCenter();
+    if (progress == '100') {
+        autoScaleAndFit();
+        setTimeout(() => {
+            adjustWorldCenter();
+        }, 50)
+    }
 
-    return model ? <primitive object={getRenderableObject()} scale={scale} position={position} /> : null;
+    return model ? <Suspense fallback={<Html center>{progress} % loaded</Html>}>
+        <primitive object={getRenderableObject()} scale={scale} position={position} />
+    </Suspense>: null;
 };
 export default Model;
