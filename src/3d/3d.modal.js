@@ -15,8 +15,8 @@ const Model = (props) => {
     } = props;
 
     useEffect(() => {
-        autoScaleAndFit();
-        adjustWorldCenter();
+        // autoScaleAndFit();
+        // adjustWorldCenter();
     }, []);
 
     useEffect(() => {
@@ -76,6 +76,8 @@ const Model = (props) => {
     const extension = getFileExtension(path);
     const model = useLoader(getValidLoader(extension), path);
 
+    autoScaleAndFit();
+    adjustWorldCenter();
 
     return model ? <primitive object={getRenderableObject()} scale={scale} position={position} /> : null;
 };
