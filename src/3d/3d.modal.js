@@ -81,10 +81,9 @@ const Model = (props) => {
 
     if (progress == '100') {
         autoScaleAndFit();
-        setTimeout(() => {
-            adjustWorldCenter();
-        }, 50)
     }
+
+    adjustWorldCenter();
 
     return model ? <Suspense fallback={<Html center>{progress} % loaded</Html>}>
         <primitive object={getRenderableObject()} scale={scale} position={position} />
