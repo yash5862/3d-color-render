@@ -67,7 +67,7 @@ class CustomColorPicker extends React.Component {
     return (
       <div>
         <div style={ styles.swatch } onClick={ this.handleClick }>
-           <h1>Choose Color: </h1> 
+           <h3>Choose Color: </h3> 
           <div style={ styles.color } />
         </div>
         { this.state.displayColorPicker ? <div style={ styles.popover }>

@@ -1,162 +1,124 @@
-import logo from "./logo.svg";
 import "./App.css";
 import Renderer3D from "./3d/renderer";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CustomColorPicker from "./components/picker.component";
 import { Col, Row } from "reactstrap";
 import { Canvas } from "@react-three/fiber";
 import Back from "./back.png";
-import TwoD from "./twod.png";
-
+import { useNavigate } from "react-router-dom";
+import { getAllElementData } from "./api";
 function App() {
+  const [value, setValue] = useState([]);
   const [color, setColor] = useState("#D5D5D5");
-  const [subColor, setSubColor] = useState("#D5D5D5");
-  const [fullView, setfullView] = useState(true);
-  const [modelData, setmodelData] = useState("/wheel.fbx");
+
+  let navigate = useNavigate();
 
   const onColorChange = (color, event) => {
     setColor(color.hex);
   };
 
-  const onSubColorChange = (color, event) => {
-    setSubColor(color.hex);
-  };
-  const fullViewDataHanler = (data) => {
-    setmodelData(data);
-    setfullView(!fullView);
-  };
+  useEffect(async () => {
+    datahanlder();
+  }, []);
 
-  const closeHandler = () => {
-    setfullView(!fullView);
-    setSubColor("#D5D5D5")
+  const datahanlder = async () => {
+    const Data = await getAllElementData();
+    if (Data.status === 200) {
+      setValue(Data?.data?.objects);
+    } else {
+      alert(Data?.message);
+    }
   };
 
   return (
     <>
       <div className="App ">
-        {fullView ? (
-          <>
-            <Col md={12} className="shadow-sm p-3 mb-5 App-header ">
-              <div className="container">
-                <CustomColorPicker
-                  color={color}
-                  onChangeComplete={onColorChange}
-                />
-              </div>
-            </Col>
-            <Row className="d-flex justify-content-center p-5">
-              <div className="card col-md-5 rounded-3 shadow-sm p-0 m-2">
-                <img
-                  src={Back}
-                  alt="Back"
-                  className="BackIcon shadow-sm"
-                  onClick={() => {
-                    fullViewDataHanler("/wheel.fbx");
-                  }}
-                />
-
-                <Canvas style={{ height: "100%", width: "100%" }}>
-                  <Renderer3D
-                    path="/wheel.fbx"
-                    scale={[1, 1, 1]}
-                    position={[0, 0, 0]}
-                    renderPriority={2}
-                    color={color}
-                  />
-                </Canvas>
-              </div>
-
-              <div className="card col-md-5 rounded shadow-sm p-0 m-2">
-                <img
-                  src={Back}
-                  alt="Back"
-                  className="BackIcon shadow-sm"
-                  onClick={() => {
-                    fullViewDataHanler("/temp.obj");
-                  }}
-                />
-                <Canvas style={{ height: "100%", width: "100%" }}>
-                  <Renderer3D
-                    path="/temp.obj"
-                    scale={[1, 1, 1]}
-                    position={[0, 0, 0]}
-                    boundingBox={false}
-                    renderPriority={2}
-                    color={color}
-                  />
-                </Canvas>
-              </div>
-
-              <div className="card col-md-5 rounded  shadow-sm p-0 m-2">
-                <img
-                  src={Back}
-                  alt="Back"
-                  className="BackIcon shadow-sm"
-                  onClick={() => {
-                    fullViewDataHanler("/tire2.gltf");
-                  }}
-                />
-                <Canvas style={{ height: "100%", width: "100%" }}>
-                  <Renderer3D
-                    path="/tire2.gltf"
-                    scale={[1, 1, 1]}
-                    position={[0, 0, 0]}
-                    boundingBox={false}
-                    renderPriority={2}
-                    color={color}
-                  />
-                </Canvas>
-              </div>
-            </Row>
-          </>
-        ) : (
-          <>
-            <Row className="d-flex justify-content-center">
-              <Col md={12} className="shadow-sm p-3 mb-5 App-header ">
-                <div className="container">
-                  <CustomColorPicker
-                    color={subColor}
-                    onChangeComplete={onSubColorChange}
-                  />
-                </div>
-              </Col>
-              <div
-                className="card col-10 rounded-3 shadow-sm p-0"
-                style={{ height: "80vh", marginTop: "50px" }}
+        <>
+          <Col md={12} className="shadow-sm p-3 mb-5 App-header ">
+            <div className="container d-flex align-items-center justify-content-between">
+              <CustomColorPicker
+                color={color}
+                onChangeComplete={onColorChange}
+              />
+              <button
+                type="button"
+                class="btn btn-outline-light"
+                onClick={() => {
+                  navigate(`/upload`);
+                }}
               >
-                <img
-                  src={Back}
-                  alt="Back"
-                  className="BackIcon shadow-sm"
-                  onClick={closeHandler}
-                  style={{
-                    transform: "rotate(180deg)",
-                  }}
+                Upload element
+              </button>
+            </div>
+          </Col>
+          <Row className="d-flex justify-content-center p-5">
+            <div className="card col-md-5 rounded-3 shadow-sm p-0 m-2">
+              <img
+                src={Back}
+                alt="Back"
+                className="BackIcon shadow-sm"
+                onClick={() => {
+                  // fullViewDataHanler("/wheel.fbx");
+                  navigate(`/1`);
+                }}
+              />
+
+              <Canvas style={{ height: "100%", width: "100%" }}>
+                <Renderer3D
+                  path="/wheel.fbx"
+                  scale={[1, 1, 1]}
+                  position={[0, 0, 0]}
+                  renderPriority={2}
+                  color={color}
                 />
-                {/* <img
-                        src={TwoD}
-                        alt="Back"
-                        className="TwoDIcon shadow-sm"
-                        onClick={() => {
-                          setfullView(!fullView);
-                        }}
-                        style={{
-                          transform: "rotate(180deg)"
-                        }}
-                      /> */}
-                <Canvas style={{ height: "100%", width: "100%" }}>
-                  <Renderer3D
-                    path={modelData}
-                    scale={[1, 1, 1]}
-                    position={[0, 0, 0]}
-                    renderPriority={2}
-                    color={subColor}
-                  />
-                </Canvas>
-              </div>
-            </Row>
-          </>
-        )}
+              </Canvas>
+            </div>
+
+            <div className="card col-md-5 rounded shadow-sm p-0 m-2">
+              <img
+                src={Back}
+                alt="Back"
+                className="BackIcon shadow-sm"
+                onClick={() => {
+                  // fullViewDataHanler("/temp.obj");
+                  navigate(`/1`);
+                }}
+              />
+              <Canvas style={{ height: "100%", width: "100%" }}>
+                <Renderer3D
+                  path="/temp.obj"
+                  scale={[1, 1, 1]}
+                  position={[0, 0, 0]}
+                  boundingBox={false}
+                  renderPriority={2}
+                  color={color}
+                />
+              </Canvas>
+            </div>
+
+            <div className="card col-md-5 rounded  shadow-sm p-0 m-2">
+              <img
+                src={Back}
+                alt="Back"
+                className="BackIcon shadow-sm"
+                onClick={() => {
+                  navigate(`/61e954554a1d8a1c98472209`);
+                }}
+              />
+              
+              <Canvas style={{ height: "100%", width: "100%" }}>
+                <Renderer3D
+                  path="/tire2.gltf"
+                  scale={[1, 1, 1]}
+                  position={[0, 0, 0]}
+                  boundingBox={false}
+                  renderPriority={2}
+                  color={color}
+                />
+              </Canvas>
+            </div>
+          </Row>
+        </>
       </div>
     </>
   );
