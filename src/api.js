@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 var url = "http://localhost:5000/api";
 
 export const getAllElementData = async () => {
@@ -16,7 +17,7 @@ export const getElementData = async (id) => {
     let response = await axios.get(`${url}/3dobjects/${id}`);
     return response.data;
   } catch (error) {
-    return error;
+    return toast.error(error);
   }
 };
 
@@ -25,6 +26,6 @@ export const uploadElement = async (data) => {
     let response = await axios.post(`${url}/3dobjects`, data);
     return response.data;
   } catch (error) {
-    return error;
+    return toast.error(error);
   }
 };

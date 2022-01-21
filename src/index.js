@@ -7,11 +7,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
 import Upload from "./Upload";
 import SingleItem from "./SingleItem";
-
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 render(
   <React.StrictMode>
     <Suspense fallback={<div>Loading... </div>}>
       <BrowserRouter>
+        <ToastContainer />
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/upload" element={<Upload />} />

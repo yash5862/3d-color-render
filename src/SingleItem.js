@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import CustomColorPicker from "./components/picker.component";
 import { Col, Row } from "reactstrap";
 import { Canvas } from "@react-three/fiber";
 import Renderer3D from "./3d/renderer";
 import { useNavigate, useParams } from "react-router-dom";
 import { getElementData } from "./api";
+import { toast } from "react-toastify";
 
 const SingleItem = () => {
   const [subColor, setSubColor] = useState("#D5D5D5");
@@ -23,9 +24,11 @@ const SingleItem = () => {
   const datahanlder = async () => {
     const Data = await getElementData(params.id);
     if (Data.status === 200) {
-      setValue(Data?.data?.objects);
+      setValue(`http://localhost:5000/${Data?.data?.path3D}`);
+      const d = `http://localhost:5000/${Data?.data?.path3D}`;
+      console.log("d", d);
     } else {
-      alert(Data?.message);
+      toast.error(Data?.message);
     }
   };
   return (
@@ -69,13 +72,15 @@ const SingleItem = () => {
           style={{ height: "80vh", marginTop: "50px" }}
         >
           <Canvas style={{ height: "100%", width: "100%" }}>
-            <Renderer3D
-              path={"/tire2.gltf"}
-              scale={[1, 1, 1]}
-              position={[0, 0, 0]}
-              renderPriority={2}
-              color={subColor}
-            />
+            <Suspense>
+              { value ? <Renderer3D
+                path={value}
+                scale={[1, 1, 1]}
+                position={[0, 0, 0]}
+                renderPriority={2}
+                color={subColor}
+              /> : null }
+            </Suspense>
           </Canvas>
         </div>
       </Row>
