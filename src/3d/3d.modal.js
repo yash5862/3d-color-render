@@ -17,6 +17,7 @@ const Model = (props) => {
     const { progress } = useProgress()
     const pathIsFile = path instanceof File;
     const [object, setObject] = useState(null);
+    const [objectLoaded, setObjectLoaded] = useState(false);
 
     useEffect(() => {
         setObject(null);
@@ -26,6 +27,9 @@ const Model = (props) => {
         loader.setPath(url);
         loader.load('', (loadData, err) => {
             setObject(loadData);
+            setTimeout(() => {
+                setObjectLoaded(true);
+            });
         });
     }, [path])
 
@@ -91,16 +95,12 @@ const Model = (props) => {
     const extension = getFileExtension(pathIsFile ? path.path : path);
 
     if (progress == '100') {
-        setTimeout(() => {
-            adjustWorldCenter();
-            autoScaleAndFit();
-        });
+        adjustWorldCenter();
+        autoScaleAndFit();
     }
-
-    // adjustWorldCenter();
 
     return getRenderableObject() ? <Suspense fallback={<Html center>{progress} % loaded</Html>}>
         <primitive object={getRenderableObject()} scale={scale} position={position} />
-    </Suspense>: null;
+    </Suspense> : null;
 };
 export default Model;

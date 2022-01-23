@@ -45,17 +45,18 @@ const Upload = () => {
 
   const pngHanlder = () => {
     const image = canvasRef?.current?.toDataURL("image/png");
-    setImgBase(image);
+    console.log('image', image)
+    return image;
   };
 
   const uploadHanlder = async () => {
-    if (imgBase === null) {
-      return toast.error("Take Pic");
-    }
+
+    let imageBase = pngHanlder();
+
     const formData = new FormData();
     formData.append("object", value);
     formData.append("name", value?.path?.split(".")[0]);
-    formData.append("image", imgBase);
+    formData.append("image", imageBase);
 
     const Data = await uploadElement(formData);
     if (Data.status === 200) {
@@ -98,6 +99,7 @@ const Upload = () => {
                 <Canvas
                   style={{ height: "100%", width: "100%" }}
                   ref={canvasRef}
+                  gl={{ preserveDrawingBuffer: true }}
                 >
                   <Renderer3D
                     path={value}
@@ -109,15 +111,15 @@ const Upload = () => {
                 </Canvas>
               </div>
               <div className="col-6 mt-3">
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary mx-3"
-                  onClick={() => {
-                    pngHanlder();
-                  }}
-                >
-                  Take Pic
-                </button>
+                {/*<button*/}
+                {/*  type="button"*/}
+                {/*  className="btn btn-outline-secondary mx-3"*/}
+                {/*  onClick={() => {*/}
+                {/*    pngHanlder();*/}
+                {/*  }}*/}
+                {/*>*/}
+                {/*  Take Pic*/}
+                {/*</button>*/}
                 <button
                   type="button"
                   className="btn btn-outline-secondary mx-3"
