@@ -100,7 +100,7 @@ const Upload = () => {
                   ref={canvasRef}
                 >
                   <Renderer3D
-                    path={value.path}
+                    path={value}
                     scale={[1, 1, 1]}
                     position={[0, 0, 0]}
                     renderPriority={2}
@@ -120,70 +120,83 @@ const Upload = () => {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-outline-secondary"
+                  className="btn btn-outline-secondary mx-3"
                   onClick={() => {
                     uploadHanlder();
                   }}
                 >
                   Upload
                 </button>
+
+                <button
+                    type="button"
+                    className="btn btn-outline-danger"
+                    onClick={() => {
+                      setValue(null);
+                    }}
+                >
+                  Clear and Select New File
+                </button>
               </div>
             </Row>
           </>
         )}
-        <div className="card col-md-6 rounded-3 shadow-sm p-1 m-2 text-center">
-          <div className="row">
-            <div className="col-12 mb-3 mt-4">
-              <img src={FileUpl} alt="FileUpload" />
-            </div>
-            <div
-              className="col-12 mb-5"
-              {...getRootProps({ className: "dropzone" })}
-            >
-              <input {...getInputProps()} />
 
-              <p className="robot-font regal-blue-color fw-bold fs-5">
-                Drag and drop your file
-              </p>
-
-              {acceptedFiles.length <= 0 && (
-                <p>
-                  {!isDragActive && "gltf . Max 100mb."}
-                  {isDragActive && !isDragReject && "Drop your Files Here"}
-                  {isDragReject && "File type not accepted, sorry!"}
-                </p>
-              )}
-            </div>
-            {acceptedFiles.length > 0 && (
-              <div className="col-12 mb-3">
-                <div className="row justify-content-center">
-                  {acceptedFiles.map((file) => {
-                    return (
-                      <div className="col-12  col-sm-4 p-2" key={file.name}>
-                        {file.name}
-                      </div>
-                    );
-                  })}
-                </div>
+        {
+          !value ? <div className="card col-md-6 rounded-3 shadow-sm p-1 m-2 text-center">
+            <div className="row">
+              <div className="col-12 mb-3 mt-4">
+                <img src={FileUpl} alt="FileUpload" />
               </div>
-            )}
-
-            <div className="col-12 mb-3">
-              <p className="robot-font font-cool-gray-color fw-normal fs-6">
-                or choose a file
-              </p>
-            </div>
-            <div className="col-12 mb-4">
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={open}
+              <div
+                  className="col-12 mb-5"
+                  {...getRootProps({ className: "dropzone" })}
               >
-                Browse files
-              </button>
+                <input {...getInputProps()} />
+
+                <p className="robot-font regal-blue-color fw-bold fs-5">
+                  Drag and drop your file
+                </p>
+
+                {acceptedFiles.length <= 0 && (
+                    <p>
+                      {!isDragActive && "gltf . Max 100mb."}
+                      {isDragActive && !isDragReject && "Drop your Files Here"}
+                      {isDragReject && "File type not accepted, sorry!"}
+                    </p>
+                )}
+              </div>
+              {acceptedFiles.length > 0 && (
+                  <div className="col-12 mb-3">
+                    <div className="row justify-content-center">
+                      {acceptedFiles.map((file) => {
+                        return (
+                            <div className="col-12  col-sm-4 p-2" key={file.name}>
+                              {file.name}
+                            </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+              )}
+
+              <div className="col-12 mb-3">
+                <p className="robot-font font-cool-gray-color fw-normal fs-6">
+                  or choose a file
+                </p>
+              </div>
+              <div className="col-12 mb-4">
+                <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={open}
+                >
+                  Browse files
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
+          </div> : null
+        }
       </Row>
     </>
   );
