@@ -38,6 +38,7 @@ const Renderer3D = (props) => {
                    renderPriority={props.renderPriority}
                    color={props.color}
                    camera={camera}
+                   exportFlag={props.exportFlag}
             />
 
             <Plane />

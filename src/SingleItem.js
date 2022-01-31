@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 const SingleItem = () => {
   const [subColor, setSubColor] = useState("#D5D5D5");
   const [value, setValue] = useState(null);
+  const [ exportFlag, setExportFlag ] = useState(false);
 
   const params = useParams();
   const onSubColorChange = (color, event) => {
@@ -31,6 +32,14 @@ const SingleItem = () => {
       toast.error(Data?.message);
     }
   };
+
+  const toggleExportFlag = () => {
+    setExportFlag(true);
+    setTimeout(() => {
+      setExportFlag(false);
+    })
+  }
+
   return (
     <>
       <Row
@@ -79,9 +88,11 @@ const SingleItem = () => {
                 position={[0, 0, 0]}
                 renderPriority={2}
                 color={subColor}
+                exportFlag={exportFlag}
               /> : null }
             </Suspense>
           </Canvas>
+          <button className="btn btn-primary" onClick={toggleExportFlag}>Export</button>
         </div>
       </Row>
     </>

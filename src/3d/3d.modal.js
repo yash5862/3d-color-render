@@ -5,19 +5,22 @@ import {FBXLoader} from "three/examples/jsm/loaders/FBXLoader";
 import * as THREE from 'three';
 import { getFileExtension } from '../utils/utils';
 import { Html, useProgress } from '@react-three/drei'
+import {GLTFExporter} from 'three/examples/jsm/exporters/GLTFExporter';
 
 const Model = (props) => {
     let {
         path,
         scale,
         rotation,
-        position = [0, 0, 0]
+        position = [0, 0, 0],
+        exportFlag
     } = props;
 
     const { progress } = useProgress()
     const pathIsFile = path instanceof File;
     const [object, setObject] = useState(null);
     const [objectLoaded, setObjectLoaded] = useState(false);
+    const exporter = new GLTFExporter();
 
     useEffect(() => {
         setObject(null);
@@ -32,6 +35,49 @@ const Model = (props) => {
             });
         });
     }, [path])
+
+    useEffect(() => {
+        if (exportFlag) {
+            exportObj();
+        }
+    }, [exportFlag])
+
+    const exportObj = () => {
+        exporter.parse(
+            getRenderableObject(),
+            ( gltf ) => {
+                if ( gltf instanceof ArrayBuffer ) {
+                    saveArrayBuffer( gltf, 'scene.gltf' );
+                } else {
+                    const output = JSON.stringify( gltf, null, 2 );
+                    saveString( output, 'scene.gltf' );
+                }
+            },
+            (err) => {
+                console.log('err', err)
+            },
+            { binary: true }
+        );
+    }
+
+    const saveArrayBuffer = (buffer, filename) => {
+        save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
+    }
+
+    const saveString = ( text, filename ) => {
+
+        save( new Blob( [ text ], { type: 'text/plain' } ), filename );
+
+    }
+
+    const link = document.createElement( 'a' );
+    link.style.display = 'none';
+    document.body.appendChild( link );
+    const save = (blob, filename) => {
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+    }
 
     useEffect(() => {
         if (getRenderableObject()) {
