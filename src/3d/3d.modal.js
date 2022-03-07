@@ -1,11 +1,11 @@
 import React, { useEffect, useState, Suspense } from 'react';
-import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader.js";
-import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
-import {FBXLoader} from "three/examples/jsm/loaders/FBXLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import * as THREE from 'three';
 import { getFileExtension } from '../utils/utils';
 import { Html, useProgress } from '@react-three/drei'
-import {GLTFExporter} from 'three/examples/jsm/exporters/GLTFExporter';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 
 const Model = (props) => {
     let {
@@ -45,12 +45,12 @@ const Model = (props) => {
     const exportObj = () => {
         exporter.parse(
             getRenderableObject(),
-            ( gltf ) => {
-                if ( gltf instanceof ArrayBuffer ) {
-                    saveArrayBuffer( gltf, 'scene.gltf' );
+            (gltf) => {
+                if (gltf instanceof ArrayBuffer) {
+                    saveArrayBuffer(gltf, 'scene.gltf');
                 } else {
-                    const output = JSON.stringify( gltf, null, 2 );
-                    saveString( output, 'scene.gltf' );
+                    const output = JSON.stringify(gltf, null, 2);
+                    saveString(output, 'scene.gltf');
                 }
             },
             (err) => {
@@ -64,15 +64,15 @@ const Model = (props) => {
         save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
     }
 
-    const saveString = ( text, filename ) => {
+    const saveString = (text, filename) => {
 
-        save( new Blob( [ text ], { type: 'text/plain' } ), filename );
+        save(new Blob([text], { type: 'text/plain' }), filename);
 
     }
 
-    const link = document.createElement( 'a' );
+    const link = document.createElement('a');
     link.style.display = 'none';
-    document.body.appendChild( link );
+    document.body.appendChild(link);
     const save = (blob, filename) => {
         link.href = URL.createObjectURL(blob);
         link.download = filename;
@@ -83,7 +83,7 @@ const Model = (props) => {
         if (getRenderableObject()) {
             getRenderableObject().traverse((o) => {
                 if (o.isMesh && o.material != null) {
-                    o.material.color = new THREE.Color( props.color );
+                    o.material.color = new THREE.Color(props.color);
                     // o.material = new THREE.MeshBasicMaterial({color: 0xFF9B86})
                 }
             });
@@ -110,8 +110,8 @@ const Model = (props) => {
 
     const adjustWorldCenter = () => {
         if (getRenderableObject()) {
-            getRenderableObject().traverse( function ( child ) {
-                if ( child.isMesh ) {
+            getRenderableObject().traverse(function (child) {
+                if (child.isMesh) {
                     child.geometry.center(); // center here
                 }
             });
@@ -133,7 +133,7 @@ const Model = (props) => {
             bbox.getSize(size);
             //Reposition to 0,halfY,0
             mroot.position.copy(cent).multiplyScalar(-1);
-            mroot.position.y-= (size.y * 0.5);
+            mroot.position.y -= (size.y * 0.5);
         }
     }
 
